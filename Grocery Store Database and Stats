@@ -1,0 +1,38 @@
+--Create a grocery store database
+create table Bakery(id INTEGER PRIMARY KEY, product TEXT, description TEXT, price INTEGER, popularity INTEGER);
+
+INSERT INTO Bakery VALUES
+(1, "Cinnamon Buns", "Breads", 3, 2),
+(2, "Wonder Bread", "Breads", 2, 4),
+(3, "Chocolate Cake", "Cakes", 10, 1),
+(4, "Birthday Cake", "Cakes", 12, 1),
+(5, "Lemon Tart", "Tart", 20, 3),
+(6, "Blueberry Scone", "Scone", 2, 3),
+(7, "Cheddar Cheese Scone", "Scone", 3, 3),
+(8, "Cupcakes", "Cakes", 4, 6),
+(9, "Macaroons", "Misc", 1, 0),
+(10, "Chocolate Chip Cookies", "Cookies", 2, 0),
+(11, "Oatmeal Cookies", "Cookies", 2, 0),
+(12, "Flour", "Ingredients", 5, 8),
+(13, "Sugar", "Ingredients", 4, 8),
+(14, "Baking Soda", "Ingredients", 3, 8),
+(15, "Mixing Bowl", "Materials", 3, 2);
+
+--list of every item and it's price
+SELECT product, price 
+FROM Bakery 
+ORDER BY product;
+
+--total price of 1 of each item?
+SELECT SUM(price) 
+FROM Bakery;
+
+--display the database ordered by price. 
+SELECT * FROM Bakery
+ORDER BY price desc; 
+
+--what are the most 5 popular items? 
+SELECT product, price, popularity
+FROM Bakery
+order by popularity desc
+limit 5;
