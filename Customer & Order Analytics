@@ -84,4 +84,9 @@ on fs.orderid=c.order_id
 where fs.quantity > 2 
 AND length(orderid) = 6;
 
+--List all the products sold in Los Angeles in February, and include how many of each were sold.
+select product, sum(quantity)
+from febsales 
+where location like '%Los Angeles%'
+group by product;
 
