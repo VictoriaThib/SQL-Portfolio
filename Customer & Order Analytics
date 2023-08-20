@@ -1,0 +1,87 @@
+#In this SQL, I'm querying a database with multiple tables in it to quantify statistics about customer and order data. 
+
+select * from bit_db.customers limit 10;
+select * from bit_db.jansales limit 20;
+select * from bit_db.customers;
+
+--clean the data
+--only want order id's that are 6 values long
+select * from bit_db.customers
+where length(order_id) = 6
+and order_id is not null;
+
+-- How many orders were placed in January? 
+select count(orderid) 
+from bit_db.jansales
+WHERE length(orderid) = 6;
+
+--How many of those orders were for an iPhone?
+select count(product) as amt_sold 
+from bit_db.jansales
+where product = 'iPhone'
+and length(orderid) = 6;
+
+select * from bit_db.febsales limit 20;
+
+--Select the customer account numbers for all the orders that were placed in February.
+select acctnum 
+from customers c
+inner join febsales fs
+on c.order_id = fs.orderid
+WHERE length(orderid) = 6
+group by c.order_id;
+
+--Which product was the cheapest one sold in January, and what was the price?
+select  product as cheapest_product, min(price)as price
+from jansales;
+--or 
+select distinct product, price
+from jansales
+order by price asc limit 1;
+
+--Which product was the most expensive one sold in January, and what was the price?
+select product as cheapest_product, max(price)as price
+from jansales
+where typeof(price) = 'real';
+--or
+select distinct product, price
+from jansales
+where typeof(price) = 'real'
+order by price desc limit 1;
+--'typeof' is needed to clean the data- blank product line with no price & "product" line with "price each" for price
+--check above
+select product, price
+from jansales 
+group by product
+order by price;
+
+--What is the total revenue for each product sold in January? 
+--Note: cleaned data; there was a blank value and a product called "product" with no price
+select product, round(sum(quantity)*price, 2) as total_revenue
+from jansales
+where product is not null
+and length(product) > 1 
+and product <> 'Product'
+group by product;
+
+--Which products were sold in February at 548 Lincoln St, Seattle, WA 98101, how many of each were sold, and what was the total revenue?
+select product, sum(quantity) as num_sold, sum(quantity)*price as revenue
+from febsales
+where location = '548 Lincoln St, Seattle, WA 98101'
+group by product;
+
+--to check accuracy above
+select * from febsales
+where location = '548 Lincoln St, Seattle, WA 98101';
+
+select * from bit_db.febsales;
+
+--How many customers ordered more than 2 products at a time in February, and what was the average amount spent for those customers?
+select count(c.acctnum) as num_customers, round(avg(quantity*price), 2) as avg_price
+from febsales fs
+left join customers c
+on fs.orderid=c.order_id
+where fs.quantity > 2 
+AND length(orderid) = 6;
+
+
